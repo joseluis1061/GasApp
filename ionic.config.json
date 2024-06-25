@@ -1,0 +1,7 @@
+{
+  "name": "gasDistribution",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
