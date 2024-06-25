@@ -8,6 +8,17 @@
           <ion-title class="subtitulo">Menu</ion-title>
         </ion-toolbar>
       </ion-header>
+
+      <ion-content>
+        <ion-menu-toggle>
+          <ion-item button="true" detail="true" [routerLink]="'set-productos'">
+            <ion-icon name="create" slot="start"></ion-icon>
+            <ion-label class="normal">Configurar productos</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+
+      </ion-content>
     </ion-menu>
 
     <ion-router-outlet id="main"></ion-router-outlet>
