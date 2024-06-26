@@ -1,3 +1,53 @@
-<p>
-  set-productos works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="subtitulo ion-text-wrap">Configurar productos</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="openMenu()">
+        <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+  <h3 class="subtitulo p-3 text-center encabezado">Ingrese los datos del producto</h3>
+
+  <ion-item>
+    <ion-label position="floating">
+      Nombre: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="string"></ion-input>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label position="floating">
+      Precio: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="number"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">
+      Precio Reducido: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="number"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label class="normal">
+      Foto: 
+    </ion-label>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCamera()">
+        <ion-icon name="images"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="save()">
+    Guardar
+  </ion-button>
+
+
+</ion-content>

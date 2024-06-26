@@ -1,6 +1,6 @@
 <ion-app>
 
-  <ion-split-pane contentId="main">
+  <ion-split-pane contentId="main" menuId="menuprincipal">
 
     <ion-menu contentId="main">
       <ion-header>
@@ -10,7 +10,7 @@
       </ion-header>
 
       <ion-content>
-        <ion-menu-toggle>
+        <ion-menu-toggle autoHide="false">
           <ion-item button="true" detail="true" [routerLink]="'set-productos'">
             <ion-icon name="create" slot="start"></ion-icon>
             <ion-label class="normal">Configurar productos</ion-label>
