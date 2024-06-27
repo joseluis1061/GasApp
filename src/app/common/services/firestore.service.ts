@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, doc, docData, setDoc, updateDoc, deleteDoc, DocumentReference, getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, docData, setDoc, updateDoc, deleteDoc, DocumentReference, getDoc, addDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-
+import { v4 as uuidv4 } from 'uuid';
 @Injectable({
   providedIn: 'root'
 })
@@ -28,15 +28,21 @@ export class FirestoreService {
     return collectionData(itemCollection) as Observable<tipo[]>;
   }
 
-  // Crear documento con id del documento automatico
+  // Crear documento con id incluido en el path
   createDocument(data: any, path: string){
-    const document = doc(this.firestore, path);
+    const document = doc(this.firestore, `${path}`);
     return setDoc(document, data);
   }
   // Crear documento con id del documento manual
   createDocumentID(data: any, path: string, idDoc: string){
     const document = doc(this.firestore, `${path}/${idDoc}`);
     return setDoc(document, data);
+  }
+  
+  // Crear documento con id del documento automatico
+  async addDocument(data: any, path: string){
+    const collectionRef = collection(this.firestore, path);
+    await addDoc(collectionRef, data);
   }
 
   async updateDocumentID(data:any, path:string, idDoc:string){
@@ -54,7 +60,6 @@ export class FirestoreService {
   }
 
   createIdDoc(){
-    const { v4: uuidv4 } = require('uuid');
     return uuidv4();
   }
 }
