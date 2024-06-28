@@ -3,6 +3,8 @@ import { MenuController } from '@ionic/angular';
 import { IProduct } from 'src/app/common/models/products.model';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { LoadingController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-set-productos',
@@ -21,11 +23,14 @@ export class SetProductosComponent  implements OnInit {
   loading: any;
   products: IProduct[] = [];
   toggleNewProduct: boolean = false;
+  isToastOpen = false;
 
   constructor(
     public menuController: MenuController, 
     private firestoreService: FirestoreService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private toastController: ToastController,
+    private alertController: AlertController
   ) { }
 
   ngOnInit(): void {
@@ -66,11 +71,12 @@ export class SetProductosComponent  implements OnInit {
     .then(
       response => {
         this.loading.dismiss();
+        this.presentToast("middle", "Producto guardado");
       }
     )
     .catch(
       (error)=>{
-        console.log("Ha ocurrido un error: ", error);
+        this.presentToast("middle", "Ha ocurrido un error al guardar producto");
       }
     );
     //await this.firestoreService.addDocument(this.newProduct, `Products`);
@@ -82,9 +88,30 @@ export class SetProductosComponent  implements OnInit {
   //   .then(response => console.log('Update product: ', response));
   // }
 
-  async deleteProduct(productId: string){
-    await this.firestoreService.deleteDocumentID('Products', productId)
-    .then(response => console.log("Delete product: ", response));
+  async deleteProduct(product: IProduct){
+    const alert = await this.alertController.create({
+      header: "Adverencia",
+      message: `¿Vas a eliminar este Producto? ${product.name}`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            this.presentToast("middle", "Cancelaste la eliminación");
+          },
+        },
+        {
+          text: 'Aceptar',
+          role: 'confirm',
+          handler: () => {
+            this.firestoreService.deleteDocumentID('Products', product.id)
+            .then(response => this.presentToast("middle", "Has eliminado el producto"));
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   formNewProduct(){
@@ -97,6 +124,17 @@ export class SetProductosComponent  implements OnInit {
       message: message
     });
     this.loading.present();
+  }
+
+  async presentToast(position: 'top' | 'middle' | 'bottom', message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: position,
+      cssClass: 'normal'
+    });
+
+    await toast.present();
   }
 
 }
