@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, collectionData, doc, docData, setDoc, updateDoc, deleteDoc, DocumentReference, getDoc, addDoc } from '@angular/fire/firestore';
+
 import { Observable } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
-  firestore = inject(Firestore)
+  private firestore = inject(Firestore)
 
   constructor() { }
 

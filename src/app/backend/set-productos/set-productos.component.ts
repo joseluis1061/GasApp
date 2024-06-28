@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { IProduct } from 'src/app/common/models/products.model';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-set-productos',
@@ -17,14 +18,14 @@ export class SetProductosComponent  implements OnInit {
     image: '',
     date: new Date
   }
-
+  loading: any;
   products: IProduct[] = [];
   toggleNewProduct: boolean = false;
 
   constructor(
     public menuController: MenuController, 
-    private firestoreService: FirestoreService
-
+    private firestoreService: FirestoreService,
+    private loadingCtrl: LoadingController
   ) { }
 
   ngOnInit(): void {
@@ -60,7 +61,18 @@ export class SetProductosComponent  implements OnInit {
 
   async saveProduct(){
     if(this.newProduct.id.length <=0) this.newProduct.id = this.firestoreService.createIdDoc();
-    await this.firestoreService.createDocument(this.newProduct, `Products/${this.newProduct.id}`);
+    this.showLoading("Guardando producto");
+    await this.firestoreService.createDocument(this.newProduct, `Products/${this.newProduct.id}`)
+    .then(
+      response => {
+        this.loading.dismiss();
+      }
+    )
+    .catch(
+      (error)=>{
+        console.log("Ha ocurrido un error: ", error);
+      }
+    );
     //await this.firestoreService.addDocument(this.newProduct, `Products`);
     this.loadNewProduct();
   }
@@ -78,6 +90,13 @@ export class SetProductosComponent  implements OnInit {
   formNewProduct(){
     this.toggleNewProduct = true;
     this.loadNewProduct();
+  }
+
+  async showLoading(message: string) {
+    this.loading = await this.loadingCtrl.create({
+      message: message
+    });
+    this.loading.present();
   }
 
 }
