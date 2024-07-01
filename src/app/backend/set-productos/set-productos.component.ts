@@ -2,9 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { IProduct } from 'src/app/common/models/products.model';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
+import { FireStorageService } from 'src/app/common/services/fire-storage.service';
 import { LoadingController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { resolve } from 'path';
 
 @Component({
   selector: 'app-set-productos',
@@ -24,13 +26,15 @@ export class SetProductosComponent  implements OnInit {
   products: IProduct[] = [];
   toggleNewProduct: boolean = false;
   isToastOpen = false;
+  newProductImage: any = "";
 
   constructor(
     public menuController: MenuController, 
     private firestoreService: FirestoreService,
     private loadingCtrl: LoadingController,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private fireStorageService: FireStorageService
   ) { }
 
   ngOnInit(): void {
@@ -135,6 +139,25 @@ export class SetProductosComponent  implements OnInit {
     });
 
     await toast.present();
+  }
+
+  upLoadImage(event: any){
+    if (event.target.files && event.target.files[0]) {
+        const reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]); // Lee el archivo como una URL de datos
+
+        reader.onloadend = (e) => {
+          if(e.target !== null)
+            this.newProductImage = e.target['result'] as string; // Establece la URL en la variable
+            
+        };
+
+        this.fireStorageService.uploadImage(event.target.files[0], "Products", "Gas").then(
+          resolve => console.log(resolve)
+        )
+    }
+
+
   }
 
 }

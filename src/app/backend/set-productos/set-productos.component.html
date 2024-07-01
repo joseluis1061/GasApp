@@ -53,17 +53,23 @@
       <ion-label class="normal px-3">
         Foto: 
       </ion-label>
-      <ion-buttons slot="end">
-        <ion-button (click)="openCamera()">
+
+      <ion-item slot="end">
+        <label for="imageInput">
           <ion-icon name="images"></ion-icon>
-        </ion-button>
-      </ion-buttons>
+        </label>
+        <input style="display: none;" id="imageInput" (change)="upLoadImage($event)" type="file"/>
+      </ion-item> 
     </ion-item>
   
     <ion-button style="margin: 30px;" expand="full" color="dark" (click)="saveProduct()">
       Guardar
     </ion-button>
 
+  }
+
+  @if(newProductImage.length > 0){
+    <ion-img [src]="newProductImage" alt="imageProduct"></ion-img>
   }
 
   @for(product of products; track product){
