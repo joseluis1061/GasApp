@@ -2,11 +2,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss'],
 })
-export class HomeComponent  implements OnInit {
+export class ProfileComponent  implements OnInit {
+
   private menuController:MenuController = inject(MenuController);
 
   constructor() { }
@@ -16,4 +17,5 @@ export class HomeComponent  implements OnInit {
   openMenu(){
     this.menuController.toggle('mainMenu');
   }
+
 }
