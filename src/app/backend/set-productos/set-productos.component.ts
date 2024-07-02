@@ -27,6 +27,7 @@ export class SetProductosComponent  implements OnInit {
   toggleNewProduct: boolean = false;
   isToastOpen = false;
   newProductImage: any = "";
+  newFile: any = "";
 
   constructor(
     public menuController: MenuController, 
@@ -70,7 +71,14 @@ export class SetProductosComponent  implements OnInit {
 
   async saveProduct(){
     if(this.newProduct.id.length <=0) this.newProduct.id = this.firestoreService.createIdDoc();
+
+
     this.showLoading("Guardando producto");
+    const name = this.newProduct.name;
+    const image = await this.fireStorageService.uploadImage(this.newFile, "Products", name);
+    this.newProduct.image = image;
+
+
     await this.firestoreService.createDocument(this.newProduct, `Products/${this.newProduct.id}`)
     .then(
       response => {
@@ -87,10 +95,6 @@ export class SetProductosComponent  implements OnInit {
     this.loadNewProduct();
   }
 
-  // async updateProduct(product:IProduct){
-  //   await this.firestoreService.updateDocumentID(product, 'Products', product.id)
-  //   .then(response => console.log('Update product: ', response));
-  // }
 
   async deleteProduct(product: IProduct){
     const alert = await this.alertController.create({
@@ -141,23 +145,16 @@ export class SetProductosComponent  implements OnInit {
     await toast.present();
   }
 
-  upLoadImage(event: any){
+  async upLoadImage(event: any){
     if (event.target.files && event.target.files[0]) {
-        const reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]); // Lee el archivo como una URL de datos
-
-        reader.onloadend = (e) => {
-          if(e.target !== null)
-            this.newProductImage = e.target['result'] as string; // Establece la URL en la variable
-            
-        };
-
-        this.fireStorageService.uploadImage(event.target.files[0], "Products", "Gas").then(
-          resolve => console.log(resolve)
-        )
+      this.newFile = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]); // Lee el archivo como una URL de datos
+      reader.onloadend = (e) => {
+        if(e.target !== null)
+          this.newProduct.image = e.target['result'] as string; // Establece la URL en la variable
+      };
     }
-
-
   }
 
 }

@@ -19,8 +19,12 @@
   @if(toggleNewProduct){
     <ion-item class="my-2">
       <ion-buttons slot="end">
-        <ion-button (click)="toggleNewProduct= false;">
-          <p class="subtitulo" style="color: black;">X</p>
+        <ion-button ion-button (click)="saveProduct()">
+          <ion-icon slot="icon-only" name="save-sharp"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="toggleNewProduct= false;" class="flex align-items-center">
+          <p class="subtitulo" style="color: black; margin: 0;">X</p>
         </ion-button>
       </ion-buttons>
     </ion-item>
@@ -62,30 +66,36 @@
       </ion-item> 
     </ion-item>
   
-    <ion-button style="margin: 30px;" expand="full" color="dark" (click)="saveProduct()">
+    <!-- <ion-button style="margin: 30px;" expand="full" color="dark" (click)="saveProduct()">
       Guardar
-    </ion-button>
+    </ion-button> -->
 
   }
 
-  @if(newProductImage.length > 0){
-    <ion-img [src]="newProductImage" alt="imageProduct"></ion-img>
+  @if(newProduct.image.length > 0){
+    <div class="flex px-4">
+      <img class="rounded-5 w-100 m-auto" [src]="newProduct.image" [alt]="newProduct.name"/>
+    </div>
   }
 
-  @for(product of products; track product){
-    <ion-item>
-      <ion-label>
-        {{product.name}}
-      </ion-label>
-      <ion-buttons>
-        <ion-tab-button (click)="newProduct = product; toggleNewProduct = true">
-          <ion-icon name="create-outline" color="success"></ion-icon>
-        </ion-tab-button>
-        <ion-tab-button (click)="deleteProduct(product)">
-          <ion-icon name="trash-outline" color="danger"></ion-icon>
-        </ion-tab-button>
-      </ion-buttons>
-    </ion-item> 
-  }
+  <ion-card>
+    <h3 class="subtitulo p-3 text-center encabezado">Lista de productos</h3>
+    @for(product of products; track product){
+      <ion-item>
+        <ion-label>
+          {{product.name}}
+        </ion-label>
+        <ion-buttons>
+          <ion-tab-button (click)="newProduct = product; toggleNewProduct = true">
+            <ion-icon name="create-outline" color="success"></ion-icon>
+          </ion-tab-button>
+          <ion-tab-button (click)="deleteProduct(product)">
+            <ion-icon name="trash-outline" color="danger"></ion-icon>
+          </ion-tab-button>
+        </ion-buttons>
+      </ion-item> 
+    }
+  </ion-card>
+
 
 </ion-content>
