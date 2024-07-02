@@ -8,3 +8,84 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+<ion-content>
+  <!-- <ion-item class="my-2">
+    <ion-buttons slot="end">
+      <ion-button ion-button (click)="saveClient()">
+        <ion-icon slot="icon-only" name="save-sharp"></ion-icon>
+      </ion-button>
+
+
+    </ion-buttons>
+  </ion-item> -->
+
+  
+  <h3 class="subtitulo p-3 text-center encabezado">Ingrese su información</h3>
+
+  <ion-item>
+    <ion-label position="floating px-2">
+      Nombre: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.name'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating px-2">
+      Email: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.name'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating px-2">
+      Password: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="password" [(ngModel)]='cliente.password' labelPlacement="stacked"></ion-input>
+  </ion-item>
+  
+  <ion-item>
+    <ion-label position="floating px-2">
+      Telefono: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="number" [(ngModel)]='cliente.phone'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating px-2">
+      Dirección: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.adress'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating px-2">
+      Descripcion: 
+    </ion-label>
+    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.referecia'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <label class="text-lg px-3">
+      Foto: 
+    </label>
+
+    <ion-item slot="end">
+      <label for="imageInput">
+        <ion-icon name="images"></ion-icon>
+      </label>
+      <input style="display: none;" id="imageInput" (change)="upLoadImage($event)" type="file"/>
+    </ion-item> 
+  </ion-item>
+
+  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="registerClient()">
+    Registrarse
+  </ion-button>
+
+  @if(cliente.image.length > 0){
+    <div class="flex px-4">
+      <img class="rounded-5 w-100 m-auto" [src]="cliente.image" [alt]="cliente.name"/>
+    </div>
+  }
+
+</ion-content>
