@@ -28,14 +28,17 @@ export class FireauthService {
     })     
   }
 
+  async getUid(){
+    const user = await this.auth.currentUser;
+    if(user === null) {
+      return null;
+    }else{
+      return user?.uid;
+    }
+  }
+
   logout(){
-    signOut(this.auth).then(() => {
-      // Sign-out successful.
-      this.router.navigate(['/']);
-    }).catch((error) => {
-      // An error happened.
-      this.router.navigate(['/']);
-    });
+    return signOut(this.auth);
   }
 
 }
@@ -71,6 +74,16 @@ registerUser(email: string, password: string): Promise<string> {
           const errorCode = error.code;
           const errorMessage = error.message;
         });
+    });
+  }
+
+    logout(){
+    signOut(this.auth).then(() => {
+      // Sign-out successful.
+      this.router.navigate(['/']);
+    }).catch((error) => {
+      // An error happened.
+      this.router.navigate(['/']);
     });
   }
 */

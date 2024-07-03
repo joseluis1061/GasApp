@@ -34,7 +34,7 @@
     <ion-label position="floating px-2">
       Email: 
     </ion-label>
-    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.name'></ion-input>
+    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.email'></ion-input>
   </ion-item>
 
   <ion-item>
@@ -80,6 +80,10 @@
 
   <ion-button style="margin: 30px;" expand="full" color="dark" (click)="registerClient()">
     Registrarse
+  </ion-button>
+
+  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="logoutClient()">
+    Salir
   </ion-button>
 
   @if(cliente.image.length > 0){
