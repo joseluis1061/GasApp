@@ -30,7 +30,7 @@ export class FireauthService {
 
   async getUid(){
     const user = await this.auth.currentUser;
-    if(user === null) {
+    if(user === undefined) {
       return null;
     }else{
       return user?.uid;

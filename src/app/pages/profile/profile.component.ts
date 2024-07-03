@@ -25,6 +25,17 @@ export class ProfileComponent  implements OnInit {
 
   ngOnInit() {
     this.initClient();
+    this.loadCurrentUserUid();
+  }
+
+  loadCurrentUserUid(){
+    this.fireauthService.getUid().then(
+      response => {
+        console.log("Current user uid: ", response);
+        return response;
+      }
+    )
+    .catch(error => {return error});
   }
 
   initClient(){
@@ -64,6 +75,9 @@ export class ProfileComponent  implements OnInit {
     }
 
     await this.firestoreService.createDocumentID(this.cliente, path, uid)
+    .then(() => {
+      this.initClient();
+    })
     .catch(e => console.log("Error data: ", e));
   }
 
