@@ -10,80 +10,170 @@
 </ion-header>
 
 <ion-content>
+
+  @if(!toggleUpdateClient){
+    <h3 class="subtitulo p-3 text-center encabezado">Ingrese su información</h3>
   
-  <h3 class="subtitulo p-3 text-center encabezado">Ingrese su información</h3>
-
-  <ion-item>
-    <ion-label position="floating px-2">
-      Nombre: 
-    </ion-label>
-    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.name'></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating px-2">
-      Email: 
-    </ion-label>
-    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.email'></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating px-2">
-      Password: 
-    </ion-label>
-    <ion-input class="normal ms-1" type="password" [(ngModel)]='cliente.password' labelPlacement="stacked"></ion-input>
-  </ion-item>
+    <ion-item>
+      <ion-label position="floating px-2">
+        Email: 
+      </ion-label>
+      <ion-input name="email" class="normal ms-1" type="text" [(ngModel)]='cliente.email'></ion-input>
+    </ion-item>
   
-  <ion-item>
-    <ion-label position="floating px-2">
-      Telefono: 
-    </ion-label>
-    <ion-input class="normal ms-1" type="number" [(ngModel)]='cliente.phone'></ion-input>
-  </ion-item>
+    <ion-item>
+      <ion-label position="floating px-2">
+        Password: 
+      </ion-label>
+      <ion-input name="password" class="normal ms-1" type="password" [(ngModel)]='cliente.password' labelPlacement="stacked"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="floating px-2">
-      Dirección: 
-    </ion-label>
-    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.adress'></ion-input>
-  </ion-item>
+    @if(toggleLoginRegister){
+      <ion-item>
+        <ion-label position="floating px-2">
+          Nombre: 
+        </ion-label>
+        <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.name'></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating px-2">
+          Telefono: 
+        </ion-label>
+        <ion-input name="phone" class="normal ms-1" type="number" [(ngModel)]='cliente.phone'></ion-input>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label position="floating px-2">
+          Dirección: 
+        </ion-label>
+        <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.adress'></ion-input>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label position="floating px-2">
+          Descripcion: 
+        </ion-label>
+        <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.referecia'></ion-input>
+      </ion-item>
+    
+      <ion-item>
+        <label class="text-lg px-3">
+          Foto: 
+        </label>
+    
+        <ion-item slot="end">
+          <label for="imageInput">
+            <ion-icon name="images"></ion-icon>
+          </label>
+          <input style="display: none;" id="imageInput" (change)="upLoadImage($event)" type="file"/>
+        </ion-item> 
+      </ion-item>
+    
+      @if(cliente.image.length > 0){
+        <div class="flex px-4">
+          <img class="rounded-5 w-100 m-auto" [src]="cliente.image" [alt]="cliente.name"/>
+        </div>
+      }
+    }
+    <ion-toolbar>
+      @if(!toggleLoginRegister){
+        <ion-button style="margin: 30px;" expand="full" color="dark" (click)="loginClient()">
+          Login
+        </ion-button>
+        <ion-button style="margin: 30px;" expand="full" color="dark" (click)="toggleLoginRegister= true">
+          ó Register
+        </ion-button>
+      }
+  
+      @if(toggleLoginRegister){
+        <ion-button style="margin: 30px;" expand="full" color="dark" (click)="registerClient()">
+          Registrarse
+        </ion-button>
+        <ion-button style="margin: 30px;" expand="full" color="dark" (click)="toggleLoginRegister= false">
+          ó Login
+        </ion-button>
+      }
+    </ion-toolbar>
+  }
+  
+  
 
-  <ion-item>
-    <ion-label position="floating px-2">
-      Descripcion: 
-    </ion-label>
-    <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.referecia'></ion-input>
-  </ion-item>
+  @if(toggleUpdateClient){
+    <h3 class="subtitulo p-3 text-center encabezado">Tú información</h3>
 
-  <ion-item>
-    <label class="text-lg px-3">
-      Foto: 
-    </label>
+    <ion-item>
+      <ion-label position="floating px-2">
+        Nombre: 
+      </ion-label>
+      <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.name'></ion-input>
+    </ion-item>
 
-    <ion-item slot="end">
-      <label for="imageInput">
-        <ion-icon name="images"></ion-icon>
+    <ion-item>
+      <ion-label position="floating px-2">
+        {{cliente.email}}
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating px-2">
+        Password: 
+      </ion-label>
+      <ion-input name="password" class="normal ms-1" type="password" [(ngModel)]='cliente.password' labelPlacement="stacked"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating px-2">
+        Telefono: 
+      </ion-label>
+      <ion-input name="phone" class="normal ms-1" type="number" [(ngModel)]='cliente.phone'></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating px-2">
+        Dirección: 
+      </ion-label>
+      <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.adress'></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating px-2">
+        Descripcion: 
+      </ion-label>
+      <ion-input class="normal ms-1" type="text" [(ngModel)]='cliente.referecia'></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <label class="text-lg px-3">
+        Foto: 
       </label>
-      <input style="display: none;" id="imageInput" (change)="upLoadImage($event)" type="file"/>
-    </ion-item> 
-  </ion-item>
 
-  @if(cliente.image.length > 0){
-    <div class="flex px-4">
-      <img class="rounded-5 w-100 m-auto" [src]="cliente.image" [alt]="cliente.name"/>
-    </div>
+      <ion-item slot="end">
+        <label for="imageInput">
+          <ion-icon name="images"></ion-icon>
+        </label>
+        <input style="display: none;" id="imageInput" (change)="upLoadImage($event)" type="file"/>
+      </ion-item> 
+    </ion-item>
+
+    @if(cliente.image.length > 0){
+      <div class="flex px-4">
+        <img class="rounded-5 w-100 m-auto" [src]="cliente.image" [alt]="cliente.name"/>
+      </div>
+    }
+
+    <ion-toolbar>
+      <ion-button style="margin: 30px;" expand="full" color="dark" (click)="logoutClient()">
+        Salir
+      </ion-button>
+  
+      <ion-button style="margin: 30px;" expand="full" color="dark" (click)="saveClient()">
+        Guardar
+      </ion-button>
+    </ion-toolbar>
+    
+
   }
 
-  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="loginClient()">
-    Login
-  </ion-button>
-
-  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="registerClient()">
-    Registrarse
-  </ion-button>
-
-  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="logoutClient()">
-    Salir
-  </ion-button>
 
 </ion-content>

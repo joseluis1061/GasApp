@@ -26,14 +26,15 @@ export class ProfileComponent  implements OnInit {
   currentUserUid: string | undefined = undefined;
   userInfoSuscibe!: Subscription;
 
-  toggleNewProduct = false;
+  toggleUpdateClient = false;
+  toggleLoginRegister = false;
   constructor() { }
 
   ngOnInit() {
     this.initClient();
     this.loadCurrentUserUid();
     this.userState();    
-    console.log("OnInit Cliente: ", this.cliente)
+    //console.log("OnInit Cliente: ", this.cliente)
   }
 
   userState(){
@@ -87,19 +88,20 @@ export class ProfileComponent  implements OnInit {
   }
 
   async saveClient(){
-    const path = "Clients";
-    const uid = this.cliente.uid;
-    this.cliente.password= "";
-    if(this.cliente.image.length > 0){
-      const urlImage = await this.fireStorageService.uploadImage(this.newFile, `${path}/${this.cliente.uid}`, `${this.cliente.name}`); //Cambiar a 
-      this.cliente.image = urlImage;
+    if(this.currentUserUid){
+      const path = "Clients";
+      this.cliente.password= "";
+      if(this.newFile !== undefined && this.newFile.length > 0){
+        const urlImage = await this.fireStorageService.uploadImage(this.newFile, `${path}/${this.cliente.uid}`, `${this.cliente.name}`); //Cambiar a 
+        this.cliente.image = urlImage;
+      }
+  
+      await this.firestoreService.createDocumentID(this.cliente, path, this.cliente.uid)
+      .then(() => {
+        this.initClient();
+      })
+      .catch(e => console.log("Error data: ", e));
     }
-
-    await this.firestoreService.createDocumentID(this.cliente, path, uid)
-    .then(() => {
-      this.initClient();
-    })
-    .catch(e => console.log("Error data: ", e));
   }
 
   async upLoadImage(event: any){
@@ -131,9 +133,8 @@ export class ProfileComponent  implements OnInit {
   logoutClient(){
     this.fireauthService.logout();
     this.userInfoSuscibe.unsubscribe();
+    this.toggleUpdateClient = false;
     this.initClient();
-    console.log(this.cliente)
-    //this.loadCurrentUserUid();
   }
 
   getCurrentClient(){
@@ -141,7 +142,8 @@ export class ProfileComponent  implements OnInit {
       this.userInfoSuscibe = this.firestoreService.getDocumentChanges<IClient>(`Clients/${this.currentUserUid}`).subscribe(
         data => {
           this.cliente = data;
-          console.log("Observer Cliente: ", this.cliente)
+          this.toggleUpdateClient = true;
+          // console.log("Observer Cliente: ", this.cliente)
         }
       )
     }
