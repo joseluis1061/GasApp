@@ -20,7 +20,7 @@ export class FirestoreService {
   // Traer elemento sin suscribirme a los cambios
   getDocumentChanges<tipo>(path: string){
     const document = doc(this.firestore, path);
-    return docData(document) as Observable<tipo[]>;
+    return docData(document) as Observable<tipo>;
   }
 
   getCollectionChanges<tipo>(path: string){

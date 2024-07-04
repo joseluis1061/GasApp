@@ -10,16 +10,6 @@
 </ion-header>
 
 <ion-content>
-  <!-- <ion-item class="my-2">
-    <ion-buttons slot="end">
-      <ion-button ion-button (click)="saveClient()">
-        <ion-icon slot="icon-only" name="save-sharp"></ion-icon>
-      </ion-button>
-
-
-    </ion-buttons>
-  </ion-item> -->
-
   
   <h3 class="subtitulo p-3 text-center encabezado">Ingrese su información</h3>
 
@@ -78,6 +68,16 @@
     </ion-item> 
   </ion-item>
 
+  @if(cliente.image.length > 0){
+    <div class="flex px-4">
+      <img class="rounded-5 w-100 m-auto" [src]="cliente.image" [alt]="cliente.name"/>
+    </div>
+  }
+
+  <ion-button style="margin: 30px;" expand="full" color="dark" (click)="loginClient()">
+    Login
+  </ion-button>
+
   <ion-button style="margin: 30px;" expand="full" color="dark" (click)="registerClient()">
     Registrarse
   </ion-button>
@@ -85,11 +85,5 @@
   <ion-button style="margin: 30px;" expand="full" color="dark" (click)="logoutClient()">
     Salir
   </ion-button>
-
-  @if(cliente.image.length > 0){
-    <div class="flex px-4">
-      <img class="rounded-5 w-100 m-auto" [src]="cliente.image" [alt]="cliente.name"/>
-    </div>
-  }
 
 </ion-content>

@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { Auth, User, user } from '@angular/fire/auth';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import { Observable, Subscription } from 'rxjs';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
+import { Observable, Subscription, BehaviorSubject, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { IClient } from '../models/client.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,13 @@ export class FireauthService {
   private router: Router = inject(Router);
   user$ = user(this.auth);
   userSubscription!: Subscription;
+  currentUserState$ = new BehaviorSubject<User|null>(null); 
+  private currentUserState: User|null = null;
 
-  constructor() {}
+  constructor() {
+    this.getUid();
+    this.stateAuth();
+  }
 
   login(email:string, password: string){
     return signInWithEmailAndPassword(this.auth, email, password);
@@ -23,10 +29,19 @@ export class FireauthService {
   }
 
   stateAuth(){
-    onAuthStateChanged(this.auth, (user) => {
-      return user; //user.uid;
-    })     
+    onAuthStateChanged(this.auth, user => {
+      if(user){
+        this.currentUserState= user;
+        this.currentUserState$.next(this.currentUserState);
+        return this.currentUserState;
+      }
+      else{
+        
+        return of(null);
+      }
+    })
   }
+
 
   async getUid(){
     const user = await this.auth.currentUser;
@@ -86,4 +101,11 @@ registerUser(email: string, password: string): Promise<string> {
       this.router.navigate(['/']);
     });
   }
+
+  stateAuth(){
+    onAuthStateChanged(this.auth, (user) => {
+      return user; //user.uid;
+    })     
+  }
+
 */

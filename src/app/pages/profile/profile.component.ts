@@ -4,6 +4,10 @@ import { IClient } from 'src/app/common/models/client.model';
 import { FireauthService } from 'src/app/common/services/fireauth.service';
 import { FireStorageService } from 'src/app/common/services/fire-storage.service';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
+import { user } from '@angular/fire/auth';
+import { error } from 'console';
+import { unsubscribe } from 'diagnostics_channel';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +23,8 @@ export class ProfileComponent  implements OnInit {
 
   cliente!: IClient;
   newFile: any;
+  currentUserUid: string | undefined = undefined;
+  userInfoSuscibe!: Subscription;
 
   toggleNewProduct = false;
   constructor() { }
@@ -26,6 +32,20 @@ export class ProfileComponent  implements OnInit {
   ngOnInit() {
     this.initClient();
     this.loadCurrentUserUid();
+    this.userState();    
+    console.log("OnInit Cliente: ", this.cliente)
+  }
+
+  userState(){
+    this.fireauthService.currentUserState$.subscribe(user => {
+      this.currentUserUid = user?.uid;
+      if(this.currentUserUid !== undefined && this.currentUserUid?.length > 0){
+        this.getCurrentClient();
+        console.log("UserState: ", this.currentUserUid);
+      }else{
+        this.initClient();
+      }
+    })
   }
 
   loadCurrentUserUid(){
@@ -56,9 +76,9 @@ export class ProfileComponent  implements OnInit {
   }
 
   async registerClient(){
-    if(this.cliente.email.length>0 && this.cliente.password.length > 0){
+    if(this.cliente.email.length>0 && this.cliente.password !== undefined && this.cliente?.password?.length > 0 ){
       console.log(`Email: ${this.cliente.email} password: ${this.cliente.password}`);
-      const response = await this.fireauthService.registerUser(this.cliente.email, this.cliente.password)
+      const response = await this.fireauthService.registerUser(this.cliente.email, this.cliente?.password )
       if(response.user.uid){
         this.cliente.uid = response.user.uid;
         this.saveClient();
@@ -69,6 +89,7 @@ export class ProfileComponent  implements OnInit {
   async saveClient(){
     const path = "Clients";
     const uid = this.cliente.uid;
+    this.cliente.password= "";
     if(this.cliente.image.length > 0){
       const urlImage = await this.fireStorageService.uploadImage(this.newFile, `${path}/${this.cliente.uid}`, `${this.cliente.name}`); //Cambiar a 
       this.cliente.image = urlImage;
@@ -93,8 +114,39 @@ export class ProfileComponent  implements OnInit {
     }
   }
 
+  loginClient(){
+    const email = this.cliente.email;
+    const password = this.cliente.password;
+    if(email.length > 0 && password !== undefined && password?.length > 0){
+      this.fireauthService.login(email, password)
+      .then(
+        () => console.log("Usuario logeado")
+      )
+      .catch(error => {
+        console.log("Error de login: ", error);
+      })
+    }
+  }
+
   logoutClient(){
     this.fireauthService.logout();
+    this.userInfoSuscibe.unsubscribe();
+    this.initClient();
+    console.log(this.cliente)
+    //this.loadCurrentUserUid();
   }
+
+  getCurrentClient(){
+    if(this.currentUserUid !== undefined){
+      this.userInfoSuscibe = this.firestoreService.getDocumentChanges<IClient>(`Clients/${this.currentUserUid}`).subscribe(
+        data => {
+          this.cliente = data;
+          console.log("Observer Cliente: ", this.cliente)
+        }
+      )
+    }
+  }
+
+
 
 }
